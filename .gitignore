@@ -1,0 +1,49 @@
+# Binaries
+*.exe
+*.out
+*.test
+
+buyit
+
+# Logs
+*.log
+log/
+logs/
+
+# Compiled object files and packages
+*.o
+*.a
+*.so
+
+# Dependencies
+vendor/
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Go build artifacts
+bin/
+pkg/
+tmp/
+
+# Beego specific files
+conf/app.conf
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Node modules (if frontend exists)
+node_modules/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
