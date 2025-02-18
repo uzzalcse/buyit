@@ -1,28 +1,45 @@
+<!-- views/index.tpl -->
 <!DOCTYPE html>
-
 <html>
-
 <head>
-    <title>BuyIt</title>
+    <title>Product Search</title>
+    <style>
+        .search-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .product-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .product-item h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .product-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
 </head>
-
 <body>
-  <header>
-    <h1 class="logo">Welcome to Beego</h1>
-    <div class="description">
-      Beego is a simple & powerful Go web framework which is inspired by tornado and sinatra.
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search for products...">
+        <div id="search-results"></div>
     </div>
-  </header>
-  <footer>
-    <div class="author">
-      Official website:
-      <a href="http://{{.Website}}">{{.Website}}</a> /
-      Contact me:
-      <a class="email" href="mailto:{{.Email}}">{{.Email}}</a>
-    </div>
-  </footer>
-  <div class="backdrop"></div>
-
-  <script src="/static/js/reload.min.js"></script>
+    <script src="/static/js/search.js"></script>
 </body>
 </html>
