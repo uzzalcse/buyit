@@ -35,7 +35,7 @@ pkg/
 tmp/
 
 # Beego specific files
-conf/app.conf
+app.conf
 
 # Docker
 docker-compose.override.yml

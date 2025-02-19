@@ -1,0 +1,5 @@
+appname = buyit
+httpport = 8080
+runmode = dev
+ES_LOCAL_API_KEY = your-api-key
+ES_LOCAL_URL = http://localhost:9200
