@@ -34,8 +34,10 @@ go mod tidy
 
 ## Running the Application
 ```bash
-# Start the server
-bee run
+# Build
+docker compose build
+# Run
+docker compose up
 ```
 The application will be available at `http://localhost:8080`
 

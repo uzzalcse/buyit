@@ -4,6 +4,7 @@
 *.test
 
 buyit
+app
 
 # Logs
 *.log
