@@ -55,7 +55,11 @@ runmode = dev
 
 # Elasticsearch Configuration
 ES_LOCAL_API_KEY = your-api-key
+ES_LOCAL_URL = http://elasticsearch:9200
+
+# without docker
 ES_LOCAL_URL = http://localhost:9200
+
 ```
 
 ## Contributing
