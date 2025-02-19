@@ -1,4 +1,3 @@
-// static/js/search.js
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const resultsContainer = document.getElementById('search-results');
@@ -19,8 +18,17 @@ document.addEventListener('DOMContentLoaded', function() {
     async function fetchResults(query) {
         try {
             const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
-            const products = await response.json();
-            
+            const data = await response.json();
+
+            // Extracting products from each hit
+            const products = data.hits.hits.flatMap(hit => hit._source.products || []);
+
+            if (products.length === 0) {
+                resultsContainer.innerHTML = '<p>No products found</p>';
+                return;
+            }
+
+            // Display results
             resultsContainer.innerHTML = products.map(product => `
                 <div class="product-item">
                     <h3>${product.product_name}</h3>
@@ -29,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>Manufacturer: ${product.manufacturer}</p>
                 </div>
             `).join('');
+
         } catch (error) {
             console.error('Error fetching results:', error);
             resultsContainer.innerHTML = '<p>Error fetching results</p>';

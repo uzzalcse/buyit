@@ -41,37 +41,22 @@ func (f *MainController) GetProducts() {
     //     },
     // }
 
-	query := map[string]interface{}{
+    query2 := map[string]interface{}{
         "query": map[string]interface{}{
-            "nested": map[string]interface{}{
-                "path": "products",
-                "query": map[string]interface{}{
-                    "bool": map[string]interface{}{
-                        "must": []map[string]interface{}{
-                            {
-                                "match_phrase_prefix": map[string]interface{}{
-                                    "products.product_name": map[string]interface{}{
-                                        "query": queryParams,
-                                        "max_expansions": 50,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                "inner_hits": map[string]interface{}{
-                    "size": 10,
+            "match_phrase_prefix": map[string]interface{}{
+                "products.product_name": map[string]interface{}{
+                    "query": queryParams,
+                    "max_expansions": 10,
                 },
             },
         },
-        "size": 20,
     }
 
-	q, _ := json.Marshal(query)
+	q, _ := json.Marshal(query2)
 	fmt.Println(string(q))
 
 	// Execute search using ESClient
-	res, err := f.esClient.ExecuteSearch(query)
+	res, err := f.esClient.ExecuteSearch(query2)
 	if err != nil {
 		f.Data["json"] = map[string]string{"error": fmt.Sprintf("Failed to fetch flight details: %v", err)}
 		f.ServeJSON()
