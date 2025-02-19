@@ -3,6 +3,7 @@ package controllers
 import (
 	"buyit/dao"
 	"fmt"
+	"strings"
 
 	beego "github.com/beego/beego/v2/server/web"
 	beecontext "github.com/beego/beego/v2/server/web/context"
@@ -26,19 +27,51 @@ func (f *MainController) Init(ctx *beecontext.Context, controllerName, actionNam
 
 func (f *MainController) GetProducts() {
 	queryParams := f.GetString("q")
-	fmt.Println(queryParams)
 
-    query := map[string]interface{}{
-        "size": 20,
-        "query": map[string]interface{}{
-            "match": map[string]interface{}{
-                "products.product_name": map[string]interface{}{
-                    "query": queryParams,
-                    "fuzziness": "AUTO",
-                },
-            },
-        },
-    }
+	query := map[string]interface{}{
+		"size": 20,  // Number of results to return
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"should": []map[string]interface{}{
+					{
+						"match_phrase_prefix": map[string]interface{}{
+							"products.product_name": map[string]interface{}{
+								"query": queryParams,
+								"max_expansions": 50,
+								"boost": 4,
+							},
+						},
+					},
+					{
+						"match": map[string]interface{}{
+							"products.product_name": map[string]interface{}{
+								"query": queryParams,
+								"operator": "or",
+								"fuzziness": "AUTO",
+								"prefix_length": 1,
+								"boost": 2,
+							},
+						},
+					},
+					{
+						"wildcard": map[string]interface{}{
+							"products.product_name": map[string]interface{}{
+								"value": fmt.Sprintf("*%s*", strings.ToLower(queryParams)),
+								"boost": 1,
+							},
+						},
+					},
+				},
+				"minimum_should_match": 1,
+			},
+		},
+		"highlight": map[string]interface{}{
+			"fields": map[string]interface{}{
+				"products.product_name": map[string]interface{}{},
+			},
+		},
+	}
+	
 
 	// Execute search using ESClient
 	res, err := f.esClient.ExecuteSearch(query)

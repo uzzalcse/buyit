@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             const query = e.target.value.trim();
-            if (query.length >= 2) {
+            if (query.length >= 1) {
                 searchProducts(query);
                 searchResults.classList.add('active');
             } else {
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ...product,
                     orderId: orderId
                 }));
-            });
+            }).slice(0, 20); // Ensure only 20 items are displayed
 
             if (productsList.length === 0) {
                 searchResults.innerHTML = '<p class="product-item">No products found</p>';
@@ -68,7 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${product.product_name}
                 </div>
             `).join('');
-
+        
+            // Ensure dropdown is scrollable if more than 20 items are available
+            searchResults.style.overflowY = 'auto';
+            searchResults.style.maxHeight = '400px';
+        
         } catch (error) {
             console.error('Error searching products:', error);
             searchResults.innerHTML = '<p class="product-item">Error searching products</p>';
