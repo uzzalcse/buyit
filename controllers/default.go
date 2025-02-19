@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"buyit/dao"
-	"encoding/json"
 	"fmt"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -28,35 +27,21 @@ func (f *MainController) Init(ctx *beecontext.Context, controllerName, actionNam
 func (f *MainController) GetProducts() {
 	queryParams := f.GetString("q")
 	fmt.Println(queryParams)
-    // query := map[string]interface{}{
-    //     "query": map[string]interface{}{
-    //         "nested": map[string]interface{}{
-    //             "path": "products",
-    //             "query": map[string]interface{}{
-    //                 "match_prefix": map[string]interface{}{
-    //                     "products.product_name": queryParams,
-    //                 },
-    //             },
-    //         },
-    //     },
-    // }
 
-    query2 := map[string]interface{}{
+    query := map[string]interface{}{
+        "size": 20,
         "query": map[string]interface{}{
-            "match_phrase_prefix": map[string]interface{}{
+            "match": map[string]interface{}{
                 "products.product_name": map[string]interface{}{
                     "query": queryParams,
-                    "max_expansions": 10,
+                    "fuzziness": "AUTO",
                 },
             },
         },
     }
 
-	q, _ := json.Marshal(query2)
-	fmt.Println(string(q))
-
 	// Execute search using ESClient
-	res, err := f.esClient.ExecuteSearch(query2)
+	res, err := f.esClient.ExecuteSearch(query)
 	if err != nil {
 		f.Data["json"] = map[string]string{"error": fmt.Sprintf("Failed to fetch flight details: %v", err)}
 		f.ServeJSON()
@@ -66,4 +51,21 @@ func (f *MainController) GetProducts() {
 	// Send response
 	f.Data["json"] = res
 	f.ServeJSON()
+}
+
+func (f *MainController) GetProductDetailsByID() {
+    id := f.Ctx.Input.Param(":id")
+    fmt.Println("Searching for ID:", id)
+
+    // Fetch document by ID instead of performing a search
+    res, err := f.esClient.GetDocument("kibana_sample_data_ecommerce", id)
+    if err != nil {
+        f.Data["json"] = map[string]string{"error": fmt.Sprintf("Failed to fetch product details: %v", err)}
+        f.ServeJSON()
+        return
+    }
+
+    // Send response
+    f.Data["json"] = res
+    f.ServeJSON()
 }

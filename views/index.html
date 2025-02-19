@@ -1,44 +1,85 @@
-<!-- views/index.tpl -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product Search</title>
     <style>
         .search-container {
-            max-width: 800px;
+            position: relative;
+            max-width: 600px;
             margin: 20px auto;
-            padding: 20px;
         }
-        
+
+        .search-wrapper {
+            position: relative;
+            z-index: 1000; /* Ensure search input and results are above details */
+        }
+
         #search-input {
             width: 100%;
             padding: 10px;
             font-size: 16px;
-            margin-bottom: 20px;
-        }
-        
-        .product-item {
             border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 10px;
             border-radius: 4px;
+            background: white;
         }
-        
-        .product-item h3 {
-            margin: 0 0 10px 0;
+
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #search-results.active {
+            display: block;
+        }
+
+        .product-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        #product-details {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            display: none;
+            position: relative;
+            z-index: 1; /* Lower than search components */
+        }
+
+        #product-details.active {
+            display: block;
+        }
+
+        .product-details h2 {
+            margin-top: 0;
             color: #333;
         }
-        
-        .product-item p {
-            margin: 5px 0;
-            color: #666;
-        }
+       
     </style>
 </head>
 <body>
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search for products...">
-        <div id="search-results"></div>
+        <div class="search-wrapper">
+            <input type="text" id="search-input" placeholder="Search products...">
+            <div id="search-results"></div>
+        </div>
+        <div id="product-details"></div>
     </div>
     <script src="/static/js/search.js"></script>
 </body>

@@ -73,3 +73,30 @@ func (ec *ESClient) ExecuteSearch(query map[string]interface{}) (map[string]inte
 
 	return result, nil
 }
+
+// GetDocument retrieves a document by its ID from the specified index.
+func (ec *ESClient) GetDocument(index string, id string) (map[string]interface{}, error) {
+    // Perform the GET request
+    res, err := ec.Client.Get(
+        index,       // Specify the index
+        id,          // Specify the document ID
+        ec.Client.Get.WithContext(context.Background()),
+    )
+    if err != nil {
+        return nil, fmt.Errorf("error fetching document: %v", err)
+    }
+    defer res.Body.Close()
+
+    // If the document does not exist, return an error
+    if res.IsError() {
+        return nil, fmt.Errorf("document not found with ID: %s", id)
+    }
+
+    // Decode the response body into a map
+    var result map[string]interface{}
+    if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
+        return nil, fmt.Errorf("error parsing response: %v", err)
+    }
+
+    return result, nil
+}
